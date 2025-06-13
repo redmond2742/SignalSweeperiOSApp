@@ -1,0 +1,576 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		C96852482DF00B1B00F9C3E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C968522F2DF00B1900F9C3E1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C96852362DF00B1900F9C3E1;
+			remoteInfo = VideoGPSRecorder;
+		};
+		C96852522DF00B1B00F9C3E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C968522F2DF00B1900F9C3E1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C96852362DF00B1900F9C3E1;
+			remoteInfo = VideoGPSRecorder;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		C96852372DF00B1900F9C3E1 /* VideoGPSRecorder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VideoGPSRecorder.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C96852472DF00B1B00F9C3E1 /* VideoGPSRecorderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VideoGPSRecorderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C96852512DF00B1B00F9C3E1 /* VideoGPSRecorderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VideoGPSRecorderUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		C968526C2DF00D6600F9C3E1 /* Exceptions for "VideoGPSRecorder" folder in "VideoGPSRecorder" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = C96852362DF00B1900F9C3E1 /* VideoGPSRecorder */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		C96852392DF00B1900F9C3E1 /* VideoGPSRecorder */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				C968526C2DF00D6600F9C3E1 /* Exceptions for "VideoGPSRecorder" folder in "VideoGPSRecorder" target */,
+			);
+			path = VideoGPSRecorder;
+			sourceTree = "<group>";
+		};
+		C968524A2DF00B1B00F9C3E1 /* VideoGPSRecorderTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = VideoGPSRecorderTests;
+			sourceTree = "<group>";
+		};
+		C96852542DF00B1B00F9C3E1 /* VideoGPSRecorderUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = VideoGPSRecorderUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C96852342DF00B1900F9C3E1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C96852442DF00B1B00F9C3E1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C968524E2DF00B1B00F9C3E1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C968522E2DF00B1900F9C3E1 = {
+			isa = PBXGroup;
+			children = (
+				C96852392DF00B1900F9C3E1 /* VideoGPSRecorder */,
+				C968524A2DF00B1B00F9C3E1 /* VideoGPSRecorderTests */,
+				C96852542DF00B1B00F9C3E1 /* VideoGPSRecorderUITests */,
+				C96852382DF00B1900F9C3E1 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C96852382DF00B1900F9C3E1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C96852372DF00B1900F9C3E1 /* VideoGPSRecorder.app */,
+				C96852472DF00B1B00F9C3E1 /* VideoGPSRecorderTests.xctest */,
+				C96852512DF00B1B00F9C3E1 /* VideoGPSRecorderUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C96852362DF00B1900F9C3E1 /* VideoGPSRecorder */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C968525B2DF00B1B00F9C3E1 /* Build configuration list for PBXNativeTarget "VideoGPSRecorder" */;
+			buildPhases = (
+				C96852332DF00B1900F9C3E1 /* Sources */,
+				C96852342DF00B1900F9C3E1 /* Frameworks */,
+				C96852352DF00B1900F9C3E1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				C96852392DF00B1900F9C3E1 /* VideoGPSRecorder */,
+			);
+			name = VideoGPSRecorder;
+			packageProductDependencies = (
+			);
+			productName = VideoGPSRecorder;
+			productReference = C96852372DF00B1900F9C3E1 /* VideoGPSRecorder.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C96852462DF00B1B00F9C3E1 /* VideoGPSRecorderTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C968525E2DF00B1B00F9C3E1 /* Build configuration list for PBXNativeTarget "VideoGPSRecorderTests" */;
+			buildPhases = (
+				C96852432DF00B1B00F9C3E1 /* Sources */,
+				C96852442DF00B1B00F9C3E1 /* Frameworks */,
+				C96852452DF00B1B00F9C3E1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C96852492DF00B1B00F9C3E1 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				C968524A2DF00B1B00F9C3E1 /* VideoGPSRecorderTests */,
+			);
+			name = VideoGPSRecorderTests;
+			packageProductDependencies = (
+			);
+			productName = VideoGPSRecorderTests;
+			productReference = C96852472DF00B1B00F9C3E1 /* VideoGPSRecorderTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		C96852502DF00B1B00F9C3E1 /* VideoGPSRecorderUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C96852612DF00B1B00F9C3E1 /* Build configuration list for PBXNativeTarget "VideoGPSRecorderUITests" */;
+			buildPhases = (
+				C968524D2DF00B1B00F9C3E1 /* Sources */,
+				C968524E2DF00B1B00F9C3E1 /* Frameworks */,
+				C968524F2DF00B1B00F9C3E1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C96852532DF00B1B00F9C3E1 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				C96852542DF00B1B00F9C3E1 /* VideoGPSRecorderUITests */,
+			);
+			name = VideoGPSRecorderUITests;
+			packageProductDependencies = (
+			);
+			productName = VideoGPSRecorderUITests;
+			productReference = C96852512DF00B1B00F9C3E1 /* VideoGPSRecorderUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C968522F2DF00B1900F9C3E1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1620;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					C96852362DF00B1900F9C3E1 = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					C96852462DF00B1B00F9C3E1 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = C96852362DF00B1900F9C3E1;
+					};
+					C96852502DF00B1B00F9C3E1 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = C96852362DF00B1900F9C3E1;
+					};
+				};
+			};
+			buildConfigurationList = C96852322DF00B1900F9C3E1 /* Build configuration list for PBXProject "VideoGPSRecorder" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = C968522E2DF00B1900F9C3E1;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = C96852382DF00B1900F9C3E1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C96852362DF00B1900F9C3E1 /* VideoGPSRecorder */,
+				C96852462DF00B1B00F9C3E1 /* VideoGPSRecorderTests */,
+				C96852502DF00B1B00F9C3E1 /* VideoGPSRecorderUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C96852352DF00B1900F9C3E1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C96852452DF00B1B00F9C3E1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C968524F2DF00B1B00F9C3E1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C96852332DF00B1900F9C3E1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C96852432DF00B1B00F9C3E1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C968524D2DF00B1B00F9C3E1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C96852492DF00B1B00F9C3E1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C96852362DF00B1900F9C3E1 /* VideoGPSRecorder */;
+			targetProxy = C96852482DF00B1B00F9C3E1 /* PBXContainerItemProxy */;
+		};
+		C96852532DF00B1B00F9C3E1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C96852362DF00B1900F9C3E1 /* VideoGPSRecorder */;
+			targetProxy = C96852522DF00B1B00F9C3E1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		C96852592DF00B1B00F9C3E1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = PG88TF7WZ4;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		C968525A2DF00B1B00F9C3E1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = PG88TF7WZ4;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C968525C2DF00B1B00F9C3E1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"VideoGPSRecorder/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "$(PROJECT_DIR)/VideoGPSRecorder/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = SignalSweeper;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.trafficsignalkit.VideoGPSRecorder;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C968525D2DF00B1B00F9C3E1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"VideoGPSRecorder/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "$(PROJECT_DIR)/VideoGPSRecorder/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = SignalSweeper;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.trafficsignalkit.VideoGPSRecorder;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		C968525F2DF00B1B00F9C3E1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.trafficsignalkit.VideoGPSRecorderTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VideoGPSRecorder.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/VideoGPSRecorder";
+			};
+			name = Debug;
+		};
+		C96852602DF00B1B00F9C3E1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.trafficsignalkit.VideoGPSRecorderTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VideoGPSRecorder.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/VideoGPSRecorder";
+			};
+			name = Release;
+		};
+		C96852622DF00B1B00F9C3E1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.trafficsignalkit.VideoGPSRecorderUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = VideoGPSRecorder;
+			};
+			name = Debug;
+		};
+		C96852632DF00B1B00F9C3E1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.trafficsignalkit.VideoGPSRecorderUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = VideoGPSRecorder;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C96852322DF00B1900F9C3E1 /* Build configuration list for PBXProject "VideoGPSRecorder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C96852592DF00B1B00F9C3E1 /* Debug */,
+				C968525A2DF00B1B00F9C3E1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C968525B2DF00B1B00F9C3E1 /* Build configuration list for PBXNativeTarget "VideoGPSRecorder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C968525C2DF00B1B00F9C3E1 /* Debug */,
+				C968525D2DF00B1B00F9C3E1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C968525E2DF00B1B00F9C3E1 /* Build configuration list for PBXNativeTarget "VideoGPSRecorderTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C968525F2DF00B1B00F9C3E1 /* Debug */,
+				C96852602DF00B1B00F9C3E1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C96852612DF00B1B00F9C3E1 /* Build configuration list for PBXNativeTarget "VideoGPSRecorderUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C96852622DF00B1B00F9C3E1 /* Debug */,
+				C96852632DF00B1B00F9C3E1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C968522F2DF00B1900F9C3E1 /* Project object */;
+}
