@@ -68,8 +68,8 @@ class MediaGridViewModel: ObservableObject {
                 let contents = try fileManager.contentsOfDirectory(
                     at: tempDirectory,
                     includingPropertiesForKeys: [.creationDateKey, .fileSizeKey],
-                    options: []
-                )
+                    options: [.skipsHiddenFiles]
+                ).filter { !$0.lastPathComponent.hasSuffix(".tmp") }
                 
                 let items = contents.compactMap { url -> MediaItem? in
                     guard let type = mediaType(for: url) else { return nil }
