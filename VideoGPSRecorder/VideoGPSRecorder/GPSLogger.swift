@@ -10,60 +10,21 @@ class GPSLogger: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var lastLocation: CLLocation?
 
     func startLogging() {
-        DispatchQueue.main.async {
-            self.locationManager.delegate = self
-            self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            self.locationManager.distanceFilter  = kCLDistanceFilterNone
-            self.locationManager.activityType    = .otherNavigation
-            self.locationManager.pausesLocationUpdatesAutomatically = false
-            self.locationManager.requestWhenInUseAuthorization()
-         
-            self.locationManager.startUpdatingLocation()
-            
-          
-        }
-        
-       
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.distanceFilter = kCLDistanceFilterNone
+        locationManager.activityType = .otherNavigation
+        locationManager.pausesLocationUpdatesAutomatically = false
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
 
-        final class LocationService: NSObject, CLLocationManagerDelegate {
-
-            private let locationManager = CLLocationManager()
-
-            override init() {
-                super.init()
-                locationManager.delegate = self
-                locationManager.desiredAccuracy = kCLLocationAccuracyBest
-                // Ask for permission up‑front
-                locationManager.requestWhenInUseAuthorization()
-            }
-
-            // MARK: - CLLocationManagerDelegate (iOS 14+)
-            func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-                switch manager.authorizationStatus {
-
-                case .notDetermined:
-                    // The user hasn’t seen the prompt yet
-                    manager.requestWhenInUseAuthorization()
-
-                case .restricted, .denied:
-                    print("❌ Location permission denied.")
-
-                case .authorizedWhenInUse, .authorizedAlways:
-                    startUpdatingLocation()
-
-                @unknown default:
-                    // Future‑proofing
-                    break
-                }
-            }
-
-            // MARK: - Helpers
-            private func startUpdatingLocation() {
-                locationManager.startUpdatingLocation()
+        // Retry GPS lock if we haven't received a location
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { _ in
+            if self.lastLocation == nil {
+                self.locationManager.startUpdatingLocation()
             }
         }
-
-
 
         let isoFormatter = ISO8601DateFormatter()
         isoFormatter.formatOptions = [.withInternetDateTime, .withDashSeparatorInDate, .withColonSeparatorInTime, .withFractionalSeconds]
@@ -83,6 +44,8 @@ class GPSLogger: NSObject, ObservableObject, CLLocationManagerDelegate {
 
     func stopLogging() {
         locationManager.stopUpdatingLocation()
+        timer?.invalidate()
+        timer = nil
         writeFooter()
         fileHandle?.closeFile()
         print("Saved GPX to: \(gpxFileURL.path)")

@@ -2,14 +2,7 @@ import AVFoundation
 import Foundation
 import AVFAudio
 import CoreLocation
-
-
 import ImageIO
-
-
-
-private var audioRecorder: AVAudioRecorder?
-private var micRecordingTimer: Timer?
 
 
 
@@ -58,10 +51,12 @@ class VideoRecorder: NSObject, ObservableObject {
 
     @Published var isRecording = false
     @Published var micCountdown: Int = 0
+    @Published var audioLevel: Float = 0
+
     private var countdownTimer: Timer?
-    
-    //private var pendingLocation: CLLocation?
-    
+    private var levelTimer: Timer?
+    private var audioRecorder: AVAudioRecorder?
+
     var gpsLogger: GPSLogger
     var pendingLocation: CLLocation? = nil
     
@@ -247,6 +242,7 @@ class VideoRecorder: NSObject, ObservableObject {
 
         do {
             audioRecorder = try AVAudioRecorder(url: outputURL, settings: settings)
+            audioRecorder?.isMeteringEnabled = true
             audioRecorder?.record()
 
             micCountdown = duration
@@ -260,6 +256,12 @@ class VideoRecorder: NSObject, ObservableObject {
                 }
             }
 
+            levelTimer?.invalidate()
+            levelTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
+                self.audioRecorder?.updateMeters()
+                self.audioLevel = self.audioRecorder?.averagePower(forChannel: 0) ?? 0
+            }
+
         } catch {
             print("❌ Failed to start mic recording: \(error.localizedDescription)")
         }
@@ -269,8 +271,10 @@ class VideoRecorder: NSObject, ObservableObject {
     private func stopMicRecording() {
         audioRecorder?.stop()
         audioRecorder = nil
-        micRecordingTimer?.invalidate()
-        micRecordingTimer = nil
+        countdownTimer?.invalidate()
+        levelTimer?.invalidate()
+        audioLevel = 0
+        micCountdown = 0
         print("🎙️ Mic recording stopped")
     }
 
