@@ -6,6 +6,12 @@ class GPSLogger: NSObject, ObservableObject, CLLocationManagerDelegate {
     private var gpxFileURL: URL!
     private var fileHandle: FileHandle?
     private var timer: Timer?
+    @Published var totalDistance: CLLocationDistance = 0.0
+    
+    @Published var lastLocationFix: CLLocation?
+    
+
+
 
     @Published var lastLocation: CLLocation?
 
@@ -91,10 +97,18 @@ class GPSLogger: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let loc = locations.last else { return }
-        lastLocation = loc
-        writeLocation(loc)
+        guard let newLocation = locations.last, newLocation.horizontalAccuracy >= 0 else { return }
+
+        if let last = lastLocation {
+            let distance = newLocation.distance(from: last) // in meters
+            totalDistance += distance
+        }
+
+        lastLocation = newLocation
+        self.lastLocationFix = newLocation
+        //logLocation(newLocation)
     }
+
     
     private func writeLocation(_ loc: CLLocation) {
         let isoFormatter = ISO8601DateFormatter()
