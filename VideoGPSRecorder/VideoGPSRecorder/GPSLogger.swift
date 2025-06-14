@@ -65,17 +65,19 @@ class GPSLogger: NSObject, ObservableObject, CLLocationManagerDelegate {
 
 
 
-        let isoFormatter = ISO8601DateFormatter()
-        isoFormatter.formatOptions = [.withInternetDateTime, .withDashSeparatorInDate, .withColonSeparatorInTime, .withFractionalSeconds]
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM-dd-yyyy--HH-mm-ss.SSS"
+        formatter.timeZone = TimeZone.current
 
-        let timestampString = isoFormatter.string(from: Date())
-        let sanitizedTimestamp = timestampString.replacingOccurrences(of: ":", with: "-")  // avoid colons in filename
+        let dateString = formatter.string(from: Date())
+        let timeZoneAbbreviation = TimeZone.current.abbreviation() ?? "UTC"
 
-        let filename = "track_\(sanitizedTimestamp).gpx"
+        let filename = "track_\(dateString)-\(timeZoneAbbreviation).gpx"
         gpxFileURL = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
 
         FileManager.default.createFile(atPath: gpxFileURL.path, contents: nil)
         fileHandle = try? FileHandle(forWritingTo: gpxFileURL)
+
 
         writeHeader()
     }

@@ -10,6 +10,8 @@ import ImageIO
 
 private var audioRecorder: AVAudioRecorder?
 private var micRecordingTimer: Timer?
+private var currentCameraInput: AVCaptureDeviceInput?
+
 
 
 
@@ -49,6 +51,9 @@ func gpsMetadata(from location: CLLocation) -> [String: Any] {
 
 
 
+
+
+
 class VideoRecorder: NSObject, ObservableObject {
     let session = AVCaptureSession()
     private var movieOutput = AVCaptureMovieFileOutput()
@@ -65,58 +70,152 @@ class VideoRecorder: NSObject, ObservableObject {
     var gpsLogger: GPSLogger
     var pendingLocation: CLLocation? = nil
     
+    
+    
 
     init(gpsLogger:GPSLogger) {
         self.gpsLogger = gpsLogger
         super.init()
         setupSession()
-        DispatchQueue.global(qos: .userInitiated).async {
-                self.session.startRunning()
-            }
+//        DispatchQueue.global(qos: .userInitiated).async {
+//                self.session.startRunning()
+//            }
+        if !session.isRunning {
+            session.startRunning() // ✅ OK after configuration is committed
+        }
     }
+    
+    func switchCamera(useUltraWide: Bool) {
+        session.beginConfiguration()
+
+        // Remove existing input
+        if let input = currentCameraInput {
+            session.removeInput(input)
+            currentCameraInput = nil
+        }
+
+        // Select camera type
+        let deviceType: AVCaptureDevice.DeviceType = useUltraWide
+            ? .builtInUltraWideCamera
+            : .builtInWideAngleCamera
+
+        guard let device = AVCaptureDevice.default(deviceType, for: .video, position: .back) else {
+            print("❌ Could not find camera of type \(deviceType)")
+            session.commitConfiguration()
+            return
+        }
+
+        do {
+            // Configure frame rate
+            try device.lockForConfiguration()
+            if let range = device.activeFormat.videoSupportedFrameRateRanges.first,
+               range.maxFrameRate >= 60 {
+                device.activeVideoMinFrameDuration = CMTime(value: 1, timescale: 60)
+                device.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: 60)
+            }
+            device.unlockForConfiguration()
+
+            // Add new input
+            let input = try AVCaptureDeviceInput(device: device)
+            if session.canAddInput(input) {
+                session.addInput(input)
+                currentCameraInput = input
+            } else {
+                print("❌ Cannot add input to session")
+            }
+        } catch {
+            print("❌ Camera input setup failed: \(error)")
+        }
+
+        session.commitConfiguration()
+
+        // Start session if not already running
+        if !session.isRunning {
+            session.startRunning()
+        }
+    }
+
 
     private func setupSession() {
         session.beginConfiguration()
         session.sessionPreset = .hd1920x1080
+
+        // Set up outputs (but NOT inputs)
         if session.canAddOutput(photoOutput) {
             session.addOutput(photoOutput)
         }
-
-
-        guard let videoDevice = AVCaptureDevice.default(for: .video),
-              let videoInput = try? AVCaptureDeviceInput(device: videoDevice),
-              session.canAddInput(videoInput) else { return }
-
-        if videoDevice.activeFormat.isVideoStabilizationModeSupported(.standard) {
-            try? videoDevice.lockForConfiguration()
-
-            let frameRateRanges = videoDevice.activeFormat.videoSupportedFrameRateRanges
-            if let range = frameRateRanges.first, range.maxFrameRate >= 60 {
-                videoDevice.activeVideoMinFrameDuration = CMTime(value: 1, timescale: 60)
-                videoDevice.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: 60)
-            }
-
-            videoDevice.unlockForConfiguration()
-        }
-
-
-        session.addInput(videoInput)
 
         if session.canAddOutput(movieOutput) {
             session.addOutput(movieOutput)
         }
 
         session.commitConfiguration()
+
+        // Set initial camera (AFTER configuration)
+        switchCamera(useUltraWide: false)
     }
 
-    func startRecording() {
-        let isoFormatter = ISO8601DateFormatter()
-        isoFormatter.formatOptions = [.withInternetDateTime, .withDashSeparatorInDate, .withColonSeparatorInTime, .withFractionalSeconds]
 
-        let timestampString = isoFormatter.string(from: Date())
-        let sanitizedTimestamp = timestampString.replacingOccurrences(of: ":", with: "-")  // avoid colons in filename
+    func startRecording(use60FPS: Bool) {
+        
+        let desiredFrameRate = use60FPS ? 60 : 30
+        
+            
 
-        let filename = "video_\(sanitizedTimestamp).mov"
+        guard let videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else {
+            print("❌ No video device found")
+            return
+        }
+
+        var didSetFrameRate = false
+
+        do {
+            try videoDevice.lockForConfiguration()
+
+            for format in videoDevice.formats {
+                let ranges = format.videoSupportedFrameRateRanges
+                if ranges.contains(where: { $0.maxFrameRate >= Double(desiredFrameRate) }) {
+                    videoDevice.activeFormat = format
+                    videoDevice.activeVideoMinFrameDuration = CMTime(value: 1, timescale: CMTimeScale(desiredFrameRate))
+                    videoDevice.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: CMTimeScale(desiredFrameRate))
+                    didSetFrameRate = true
+                    break
+                }
+            }
+
+            videoDevice.unlockForConfiguration()
+
+            if !didSetFrameRate {
+                print("❌ No compatible format found for \(desiredFrameRate) fps")
+            }
+
+        } catch {
+            print("❌ Failed to configure video device: \(error)")
+        }
+
+
+           do {
+               try videoDevice.lockForConfiguration()
+               videoDevice.activeVideoMinFrameDuration = CMTime(value: 1, timescale: CMTimeScale(desiredFrameRate))
+               videoDevice.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: CMTimeScale(desiredFrameRate))
+               videoDevice.unlockForConfiguration()
+           } catch {
+               print("❌ Failed to set frame rate: \(error)")
+           }
+        
+        
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM-dd-yyyy--HH-mm-ss.SSS"
+        formatter.timeZone = TimeZone.current
+
+        let dateString = formatter.string(from: Date())
+
+        // Get timezone abbreviation safely
+        let timeZoneAbbreviation = TimeZone.current.abbreviation() ?? "UTC"
+
+        // Compose final filename
+        let filename = "video_\(dateString)-\(timeZoneAbbreviation).mov"
         let outputPath = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
         outputURL = outputPath
 

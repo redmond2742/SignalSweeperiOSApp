@@ -13,10 +13,14 @@ struct OrientationLock {
         UIDevice.current.setValue(orientationValue, forKey: "orientation")
 
         if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-            scene.requestGeometryUpdate(.iOS(interfaceOrientations: .landscapeRight)) { (error: Error?) in
-                if let error = error {
-                    print("Failed to update geometry: \(error.localizedDescription)")
+            if #available(iOS 16.0, *) {
+                scene.requestGeometryUpdate(.iOS(interfaceOrientations: .landscapeRight)) { (error: Error?) in
+                    if let error = error {
+                        print("Failed to update geometry: \(error.localizedDescription)")
+                    }
                 }
+            } else {
+                // Fallback on earlier versions
             }
         }
     }
