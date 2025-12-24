@@ -11,7 +11,6 @@ struct ContentView: View {
     @State private var isMenuOpen: Bool = false
     @State private var isMicEnabled: Bool = false
     @State private var isTakingPhoto = false
-    @State private var use60FPS = false
     @State private var useUltraWideCamera = false
 
     init() {
@@ -25,19 +24,12 @@ struct ContentView: View {
             NavigationStack {
                 GeometryReader { geometry in
                     ZStack {
-                        // Modern gradient background
-                        LinearGradient(
-                            colors: [
-                                Color.black.opacity(0.95),
-                                Color.black.opacity(0.85)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                        .ignoresSafeArea()
+                        // Minimal dark background
+                        Color.black
+                            .ignoresSafeArea()
                         
                         VStack(spacing: 0) {
-                            // Top status bar with modern glass morphism
+                            // Top status bar with minimal styling
                             topStatusBar
                             
                             // Main content area with improved spacing
@@ -87,12 +79,9 @@ struct ContentView: View {
             Spacer()
             
             // Right side controls
-            VStack(spacing: 4) {
-                // Camera and FPS toggles
-                HStack(spacing: 6) {
-                    wideAngleToggle
-                    fpsToggle
-                }
+            HStack(spacing: 8) {
+                wideAngleToggle
+                fpsBadge
             }
             
             // Menu button
@@ -101,15 +90,12 @@ struct ContentView: View {
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
         .background(
-            // Glass morphism effect
-            ZStack {
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(.ultraThinMaterial)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(Color.white.opacity(0.2), lineWidth: 1)
-                    )
-            }
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.white.opacity(0.05))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.white.opacity(0.12), lineWidth: 1)
+                )
         )
         .padding(.horizontal, 16)
         .padding(.top, 6)
@@ -224,64 +210,25 @@ struct ContentView: View {
         }
     }
     
-    var fpsToggle: some View {
-        HStack(spacing: 0) {
-            // 30 FPS option
-            Text("30")
-                .font(.system(size: 8, weight: .bold))
-                .foregroundColor(use60FPS ? .white.opacity(0.6) : .white)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 4)
+    var fpsBadge: some View {
+        VStack(spacing: 4) {
+            Text("60 FPS")
+                .font(.system(size: 10, weight: .semibold))
+                .foregroundColor(.white)
+                .frame(width: 60, height: 28)
                 .background(
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(use60FPS ? Color.clear : Color.blue)
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color.white.opacity(0.08))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.white.opacity(0.16), lineWidth: 1)
+                        )
                 )
-                .onTapGesture {
-                    if !recorder.isRecording {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            use60FPS = false
-                        }
-                    }
-                }
-            
-            // 60 FPS option
-            Text("60")
-                .font(.system(size: 8, weight: .bold))
-                .foregroundColor(use60FPS ? .white : .white.opacity(0.6))
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 4)
-                .background(
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(use60FPS ? Color.blue : Color.clear)
-                )
-                .onTapGesture {
-                    if !recorder.isRecording {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            use60FPS = true
-                        }
-                    }
-                }
+
+            Text("High Res")
+                .font(.system(size: 8, weight: .medium))
+                .foregroundColor(.white.opacity(0.7))
         }
-        .frame(width: 44, height: 32)
-        .padding(2)
-        .background(
-            RoundedRectangle(cornerRadius: 8)
-                .fill(Color.white.opacity(0.1))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(Color.white.opacity(0.3), lineWidth: 1)
-                )
-        )
-        .opacity(recorder.isRecording ? 0.5 : 1.0)
-        .overlay(
-            VStack {
-                Text("FPS")
-                    .font(.system(size: 6, weight: .medium))
-                    .foregroundColor(.white.opacity(0.7))
-                Spacer()
-            }
-            .padding(.top, -16)
-        )
     }
     
     var menuButton: some View {
@@ -310,23 +257,15 @@ struct ContentView: View {
     // MARK: - Video Preview Section
     var videoPreviewSection: some View {
         VStack(spacing: 1) {
-            // Video preview with modern styling
+                            // Video preview with minimal styling
             VideoPreviewView(session: recorder.session, orientationObserver: orientationObserver)
                 .aspectRatio(16/9, contentMode: .fit)
                 .background(Color.black)
-                .cornerRadius(16)
+                .cornerRadius(12)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(
-                            LinearGradient(
-                                colors: [Color.white.opacity(0.3), Color.clear],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ),
-                            lineWidth: 2
-                        )
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.white.opacity(0.08), lineWidth: 1)
                 )
-                .shadow(color: .black.opacity(0.5), radius: 15, x: 0, y: 8)
                 .overlay(
                     // Recording indicator overlay
                     recorder.isRecording ?
@@ -385,7 +324,7 @@ struct ContentView: View {
                     gpsLogger.stopLogging()
                     stopTimer()
                 } else {
-                    recorder.startRecording(use60FPS: use60FPS)
+                    recorder.startRecording()
                     gpsLogger.startLogging()
                     startTimer()
                 }
@@ -435,20 +374,13 @@ struct ContentView: View {
                     .frame(width: 48, height: 48)
                     .background(
                         Circle()
-                            .fill(
-                                LinearGradient(
-                                    colors: [Color.blue, Color.blue.opacity(0.8)],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
+                            .fill(Color.white.opacity(0.08))
                             .overlay(
                                 Circle()
-                                    .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                                    .stroke(Color.white.opacity(0.2), lineWidth: 1)
                             )
                     )
                     .scaleEffect(isTakingPhoto ? 0.85 : 1.0)
-                    .shadow(color: .blue.opacity(0.3), radius: 6, x: 0, y: 3)
             }
             .accessibilityLabel("Take Photo")
             
@@ -467,7 +399,7 @@ struct ContentView: View {
                 Image(systemName: isMicEnabled ? "mic.fill" : "mic.slash.fill")
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundColor(isMicEnabled ? .green : .red)
-                
+
                 Text(isMicEnabled ? "ON" : "OFF")
                     .font(.system(size: 9, weight: .bold))
                     .foregroundColor(isMicEnabled ? .green : .red)
@@ -475,7 +407,7 @@ struct ContentView: View {
             .frame(width: 60, height: 28)
             .background(
                 RoundedRectangle(cornerRadius: 14)
-                    .fill(Color.white.opacity(0.1))
+                    .fill(Color.white.opacity(0.06))
                     .overlay(
                         RoundedRectangle(cornerRadius: 14)
                             .stroke(isMicEnabled ? Color.green : Color.red, lineWidth: 1)
