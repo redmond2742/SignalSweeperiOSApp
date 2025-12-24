@@ -19,10 +19,6 @@ struct MediaListItem: Identifiable, Equatable {
         case photo
         case gpx
     }
-
-    static func == (lhs: MediaListItem, rhs: MediaListItem) -> Bool {
-        lhs.url == rhs.url
-    }
 }
 
 @MainActor
