@@ -52,7 +52,7 @@ struct ContentView: View {
                 }
             }
             .sheet(isPresented: $isMenuOpen) {
-                MediaGridView()
+                FileListView()
             }
             .onAppear {
                 OrientationLock.lockToLandscape()
