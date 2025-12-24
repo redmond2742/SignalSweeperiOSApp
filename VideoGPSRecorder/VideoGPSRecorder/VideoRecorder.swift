@@ -2,11 +2,7 @@ import AVFoundation
 import Foundation
 import AVFAudio
 import CoreLocation
-
-
 import ImageIO
-
-
 
 private var audioRecorder: AVAudioRecorder?
 private var micRecordingTimer: Timer?
@@ -105,16 +101,9 @@ class VideoRecorder: NSObject, ObservableObject {
             return
         }
 
-        do {
-            // Configure frame rate
-            try device.lockForConfiguration()
-            if let range = device.activeFormat.videoSupportedFrameRateRanges.first,
-               range.maxFrameRate >= 60 {
-                device.activeVideoMinFrameDuration = CMTime(value: 1, timescale: 60)
-                device.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: 60)
-            }
-            device.unlockForConfiguration()
+        configureHighRes60FPS(for: device)
 
+        do {
             // Add new input
             let input = try AVCaptureDeviceInput(device: device)
             if session.canAddInput(input) {
@@ -138,7 +127,11 @@ class VideoRecorder: NSObject, ObservableObject {
 
     private func setupSession() {
         session.beginConfiguration()
-        session.sessionPreset = .hd1920x1080
+        if session.canSetSessionPreset(.hd4K3840x2160) {
+            session.sessionPreset = .hd4K3840x2160
+        } else {
+            session.sessionPreset = .hd1920x1080
+        }
 
         // Set up outputs (but NOT inputs)
         if session.canAddOutput(photoOutput) {
@@ -156,52 +149,14 @@ class VideoRecorder: NSObject, ObservableObject {
     }
 
 
-    func startRecording(use60FPS: Bool) {
-        
-        let desiredFrameRate = use60FPS ? 60 : 30
-        
-            
+    func startRecording() {
 
-        guard let videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else {
+        guard let videoDevice = currentCameraInput?.device ?? AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else {
             print("❌ No video device found")
             return
         }
 
-        var didSetFrameRate = false
-
-        do {
-            try videoDevice.lockForConfiguration()
-
-            for format in videoDevice.formats {
-                let ranges = format.videoSupportedFrameRateRanges
-                if ranges.contains(where: { $0.maxFrameRate >= Double(desiredFrameRate) }) {
-                    videoDevice.activeFormat = format
-                    videoDevice.activeVideoMinFrameDuration = CMTime(value: 1, timescale: CMTimeScale(desiredFrameRate))
-                    videoDevice.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: CMTimeScale(desiredFrameRate))
-                    didSetFrameRate = true
-                    break
-                }
-            }
-
-            videoDevice.unlockForConfiguration()
-
-            if !didSetFrameRate {
-                print("❌ No compatible format found for \(desiredFrameRate) fps")
-            }
-
-        } catch {
-            print("❌ Failed to configure video device: \(error)")
-        }
-
-
-           do {
-               try videoDevice.lockForConfiguration()
-               videoDevice.activeVideoMinFrameDuration = CMTime(value: 1, timescale: CMTimeScale(desiredFrameRate))
-               videoDevice.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: CMTimeScale(desiredFrameRate))
-               videoDevice.unlockForConfiguration()
-           } catch {
-               print("❌ Failed to set frame rate: \(error)")
-           }
+        configureHighRes60FPS(for: videoDevice)
         
         
         
@@ -237,6 +192,38 @@ class VideoRecorder: NSObject, ObservableObject {
                 self.isRecording = true
             }
         }
+    }
+
+    private func configureHighRes60FPS(for device: AVCaptureDevice) {
+        do {
+            try device.lockForConfiguration()
+
+            if let bestFormat = bestHighRes60FPSFormat(for: device) {
+                device.activeFormat = bestFormat
+                device.activeVideoMinFrameDuration = CMTime(value: 1, timescale: 60)
+                device.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: 60)
+            } else {
+                print("❌ No compatible 60fps high-resolution format found")
+            }
+
+            device.unlockForConfiguration()
+        } catch {
+            print("❌ Failed to configure video device: \(error)")
+        }
+    }
+
+    private func bestHighRes60FPSFormat(for device: AVCaptureDevice) -> AVCaptureDevice.Format? {
+        device.formats
+            .filter { format in
+                format.videoSupportedFrameRateRanges.contains { $0.maxFrameRate >= 60 }
+            }
+            .max { lhs, rhs in
+                let lhsDimensions = CMVideoFormatDescriptionGetDimensions(lhs.formatDescription)
+                let rhsDimensions = CMVideoFormatDescriptionGetDimensions(rhs.formatDescription)
+                let lhsPixels = lhsDimensions.width * lhsDimensions.height
+                let rhsPixels = rhsDimensions.width * rhsDimensions.height
+                return lhsPixels < rhsPixels
+            }
     }
 
     func stopRecording() {
