@@ -19,10 +19,6 @@ struct MediaListItem: Identifiable, Equatable {
         case photo
         case gpx
     }
-
-    static func == (lhs: MediaListItem, rhs: MediaListItem) -> Bool {
-        lhs.url == rhs.url
-    }
 }
 
 @MainActor
@@ -37,74 +33,79 @@ final class FileListViewModel: ObservableObject {
 
     func loadFiles() {
         isLoading = true
-        let urls = (try? fileManager.contentsOfDirectory(
-            at: fileManager.temporaryDirectory,
-            includingPropertiesForKeys: [.creationDateKey, .fileSizeKey],
-            options: [.skipsHiddenFiles]
-        )) ?? []
 
-        let items = urls.compactMap { url -> MediaListItem? in
-            guard let type = Self.mediaType(for: url) else { return nil }
-            guard let resourceValues = try? url.resourceValues(forKeys: [.creationDateKey, .fileSizeKey]) else {
-                return nil
+        Task.detached { [weak self] in
+            guard let self else { return }
+            let urls = (try? self.fileManager.contentsOfDirectory(
+                at: self.fileManager.temporaryDirectory,
+                includingPropertiesForKeys: [.creationDateKey, .fileSizeKey],
+                options: [.skipsHiddenFiles]
+            )) ?? []
+
+            let items = urls.compactMap { url -> MediaListItem? in
+                guard let type = self.mediaType(for: url) else { return nil }
+                guard let resourceValues = try? url.resourceValues(forKeys: [.creationDateKey, .fileSizeKey]) else {
+                    return nil
+                }
+
+                let creationDate = resourceValues.creationDate ?? Date()
+                let fileSize = Int64(resourceValues.fileSize ?? 0)
+                let name = url.lastPathComponent
+
+                switch type {
+                case .video:
+                    let asset = AVURLAsset(url: url)
+                    let duration = asset.duration.seconds
+                    return MediaListItem(
+                        url: url,
+                        name: name,
+                        type: type,
+                        creationDate: creationDate,
+                        fileSize: fileSize,
+                        duration: duration,
+                        gpxDistance: nil,
+                        gpxCoordinate: nil,
+                        gpxCity: nil
+                    )
+                case .photo:
+                    return MediaListItem(
+                        url: url,
+                        name: name,
+                        type: type,
+                        creationDate: creationDate,
+                        fileSize: fileSize,
+                        duration: nil,
+                        gpxDistance: nil,
+                        gpxCoordinate: nil,
+                        gpxCity: nil
+                    )
+                case .gpx:
+                    let coordinates = self.parseGPXCoordinates(from: url)
+                    let gpxDistance = self.distance(for: coordinates)
+                    let coordinate = coordinates.first
+                    return MediaListItem(
+                        url: url,
+                        name: name,
+                        type: type,
+                        creationDate: creationDate,
+                        fileSize: fileSize,
+                        duration: nil,
+                        gpxDistance: gpxDistance,
+                        gpxCoordinate: coordinate,
+                        gpxCity: coordinate == nil ? "Unknown" : "Resolving..."
+                    )
+                }
             }
 
-            let creationDate = resourceValues.creationDate ?? Date()
-            let fileSize = Int64(resourceValues.fileSize ?? 0)
-            let name = url.lastPathComponent
+            let sortedItems = items.sorted { $0.creationDate > $1.creationDate }
 
-            switch type {
-            case .video:
-                let asset = AVURLAsset(url: url)
-                let duration = asset.duration.seconds
-                return MediaListItem(
-                    url: url,
-                    name: name,
-                    type: type,
-                    creationDate: creationDate,
-                    fileSize: fileSize,
-                    duration: duration,
-                    gpxDistance: nil,
-                    gpxCoordinate: nil,
-                    gpxCity: nil
-                )
-            case .photo:
-                return MediaListItem(
-                    url: url,
-                    name: name,
-                    type: type,
-                    creationDate: creationDate,
-                    fileSize: fileSize,
-                    duration: nil,
-                    gpxDistance: nil,
-                    gpxCoordinate: nil,
-                    gpxCity: nil
-                )
-            case .gpx:
-                let coordinates = Self.parseGPXCoordinates(from: url)
-                let gpxDistance = Self.distance(for: coordinates)
-                let coordinate = coordinates.first
-                return MediaListItem(
-                    url: url,
-                    name: name,
-                    type: type,
-                    creationDate: creationDate,
-                    fileSize: fileSize,
-                    duration: nil,
-                    gpxDistance: gpxDistance,
-                    gpxCoordinate: coordinate,
-                    gpxCity: coordinate == nil ? "Unknown" : "Resolving..."
-                )
+            await MainActor.run {
+                self.items = sortedItems
+                self.isLoading = false
             }
-        }
 
-        let sortedItems = items.sorted { $0.creationDate > $1.creationDate }
-        self.items = sortedItems
-        self.isLoading = false
-
-        for item in sortedItems where item.type == .gpx {
-            Task { [weak self] in
-                await self?.updateCity(for: item)
+            for item in sortedItems where item.type == .gpx {
+                await self.updateCity(for: item)
             }
         }
     }
@@ -155,7 +156,7 @@ final class FileListViewModel: ObservableObject {
         return String(format: "%.2f mi", miles)
     }
 
-    private static func mediaType(for url: URL) -> MediaListItem.MediaType? {
+    private func mediaType(for url: URL) -> MediaListItem.MediaType? {
         switch url.pathExtension.lowercased() {
         case "mov", "mp4", "m4v":
             return .video
@@ -168,7 +169,7 @@ final class FileListViewModel: ObservableObject {
         }
     }
 
-    private static func parseGPXCoordinates(from url: URL) -> [CLLocationCoordinate2D] {
+    private func parseGPXCoordinates(from url: URL) -> [CLLocationCoordinate2D] {
         guard let content = try? String(contentsOf: url, encoding: .utf8) else { return [] }
         let pattern = "lat=\\\"([0-9.+-]+)\\\" lon=\\\"([0-9.+-]+)\\\""
         guard let regex = try? NSRegularExpression(pattern: pattern) else { return [] }
@@ -187,7 +188,7 @@ final class FileListViewModel: ObservableObject {
         }
     }
 
-    private static func distance(for coordinates: [CLLocationCoordinate2D]) -> CLLocationDistance {
+    private func distance(for coordinates: [CLLocationCoordinate2D]) -> CLLocationDistance {
         guard coordinates.count > 1 else { return 0 }
         var distance: CLLocationDistance = 0
         for index in 1..<coordinates.count {
