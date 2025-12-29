@@ -33,17 +33,18 @@ struct ContentView: View {
                             topStatusBar
                             
                             // Main content area with improved spacing
-                            HStack(spacing: 4) {
-                                // Left side - Video preview (70% width)
+                            HStack(spacing: 8) {
+                                // Left side - Video preview (78% width)
                                 videoPreviewSection
-                                    .frame(maxWidth: geometry.size.width * 0.70)
+                                    .frame(maxWidth: geometry.size.width * 0.78)
+                                    .frame(maxHeight: .infinity)
                                 
-                                // Right side - Controls (25% width)
+                                // Right side - Controls (18% width)
                                 controlsSection
-                                    .frame(maxWidth: geometry.size.width * 0.25)
+                                    .frame(maxWidth: geometry.size.width * 0.18)
                             }
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
                             
                             // Bottom GPS info bar with compact styling
                             bottomGPSBar
@@ -259,9 +260,10 @@ struct ContentView: View {
         VStack(spacing: 1) {
                             // Video preview with minimal styling
             VideoPreviewView(session: recorder.session, orientationObserver: orientationObserver)
-                .aspectRatio(16/9, contentMode: .fit)
+                .aspectRatio(16/9, contentMode: .fill)
                 .background(Color.black)
                 .cornerRadius(12)
+                .clipped()
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
                         .stroke(Color.white.opacity(0.08), lineWidth: 1)
@@ -427,89 +429,58 @@ struct ContentView: View {
     
     // MARK: - Bottom GPS Bar
     var bottomGPSBar: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 16) {
+            HStack(spacing: 6) {
+                Circle()
+                    .fill(recorder.isRecording && gpsLogger.lastLocation != nil ? Color.green : Color.orange)
+                    .frame(width: 8, height: 8)
+                    .shadow(color: Color.green.opacity(0.6), radius: recorder.isRecording ? 4 : 0)
+
+                Text(recorder.isRecording ? "Logging" : "Standby")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundColor(.white)
+            }
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(
+                Capsule()
+                    .fill(Color.black.opacity(0.4))
+            )
+
+            Divider()
+                .frame(height: 22)
+                .background(Color.white.opacity(0.2))
+
             if let loc = gpsLogger.lastLocation {
-                let lat = String(format: "%.3f", loc.coordinate.latitude)
-                let lon = String(format: "%.3f", loc.coordinate.longitude)
-                let alt = String(format: "%.1f", loc.altitude)
-                let speedMph = loc.speed * 2.23694
-                
-                // Coordinates
-                HStack(spacing: 3) {
-                    Image(systemName: "location.fill")
-                        .font(.system(size: 10))
-                        .foregroundColor(.blue)
-                    
-                    Text("(\(lat), \(lon))")
-                        .font(.system(size: 11, weight: .medium, design: .monospaced))
-                        .foregroundColor(.white)
-                }
-                
-                Spacer()
-                
-                // Altitude
-                HStack(spacing: 3) {
-                    Image(systemName: "mountain.2.fill")
-                        .font(.system(size: 10))
-                        .foregroundColor(.green)
-                    
-                    Text("\(alt)m")
-                        .font(.system(size: 11, weight: .medium, design: .monospaced))
-                        .foregroundColor(.white)
-                }
-                
-                // Speed
-                HStack(spacing: 3) {
-                    Image(systemName: "speedometer")
-                        .font(.system(size: 10))
-                        .foregroundColor(.orange)
-                    
-                    Text("\(String(format: "%.1f", speedMph)) mph")
-                        .font(.system(size: 11, weight: .medium, design: .monospaced))
-                        .foregroundColor(.white)
-                }
-                
-                // Distance (when recording)
-                if recorder.isRecording {
-                    HStack(spacing: 3) {
-                        Image(systemName: "point.topleft.down.curvedto.point.bottomright.up")
-                            .font(.system(size: 10))
-                            .foregroundColor(.purple)
-                        
-                        Text("\(String(format: "%.2f", gpsLogger.totalDistance * 0.000621371)) mi")
-                            .font(.system(size: 11, weight: .medium, design: .monospaced))
-                            .foregroundColor(.white)
-                    }
-                }
-                
-                Spacer()
-                
-                // Time
-                HStack(spacing: 3) {
-                    Image(systemName: "clock.fill")
-                        .font(.system(size: 10))
-                        .foregroundColor(.cyan)
-                    
-                    Text(formattedTime(from: loc.timestamp))
-                        .font(.system(size: 11, weight: .medium, design: .monospaced))
-                        .foregroundColor(.white)
+                let lat = String(format: "%.5f", loc.coordinate.latitude)
+                let lon = String(format: "%.5f", loc.coordinate.longitude)
+                let speedMph = max(loc.speed, 0) * 2.23694
+
+                HStack(spacing: 16) {
+                    gpsInfoColumn(label: "LAT", value: lat)
+                    gpsInfoColumn(label: "LON", value: lon)
+                    gpsInfoColumn(label: "SPEED", value: "\(String(format: "%.1f", speedMph)) mph")
+                    gpsInfoColumn(label: "TIMESTAMP", value: formattedTime(from: loc.timestamp))
                 }
             } else {
-                HStack(spacing: 8) {
+                HStack(spacing: 12) {
                     Image(systemName: "location.slash")
-                        .foregroundColor(.red)
+                        .foregroundColor(.orange)
                         .font(.system(size: 12))
-                    
-                    Text("GPS Not Available")
+
+                    Text("Waiting for GPS signal…")
                         .font(.system(size: 12, weight: .semibold))
-                        .foregroundColor(.red)
+                        .foregroundColor(.white.opacity(0.8))
                 }
             }
+
+            Spacer()
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 8)
+        .padding(.vertical, 10)
         .background(
-            .ultraThinMaterial
+            RoundedRectangle(cornerRadius: 0)
+                .fill(.ultraThinMaterial)
         )
         .overlay(
             Rectangle()
@@ -517,6 +488,19 @@ struct ContentView: View {
                 .foregroundColor(.white.opacity(0.2)),
             alignment: .top
         )
+    }
+
+    private func gpsInfoColumn(label: String, value: String) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(label)
+                .font(.system(size: 9, weight: .semibold))
+                .foregroundColor(.white.opacity(0.6))
+                .tracking(0.6)
+
+            Text(value)
+                .font(.system(size: 12, weight: .semibold, design: .monospaced))
+                .foregroundColor(.white)
+        }
     }
     
     // MARK: - Countdown Circle
