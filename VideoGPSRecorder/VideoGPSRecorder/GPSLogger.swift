@@ -6,6 +6,8 @@ class GPSLogger: NSObject, ObservableObject, CLLocationManagerDelegate {
     private var gpxFileURL: URL!
     private var fileHandle: FileHandle?
     private var timer: Timer?
+    private let fileWriteQueue = DispatchQueue(label: "com.videogpsrecorder.gpx.write")
+    private var lastLoggedTimestamp: Date?
     @Published var totalDistance: CLLocationDistance = 0.0
     
     @Published var lastLocationFix: CLLocation?
@@ -50,11 +52,17 @@ class GPSLogger: NSObject, ObservableObject, CLLocationManagerDelegate {
         writeHeader()
 
         let timer = Timer(timeInterval: 1.0, repeats: true) { [weak self] _ in
-            guard let self = self, let location = self.lastLocation, location.horizontalAccuracy >= 0 else {
+            guard let self = self else { return }
+            self.locationManager.requestLocation()
+            guard let location = self.lastLocationFix ?? self.lastLocation, location.horizontalAccuracy >= 0 else {
                 return
             }
-            let timestamp = Date()
-            DispatchQueue.global(qos: .utility).async {
+            let timestamp = location.timestamp
+            if let lastLoggedTimestamp = self.lastLoggedTimestamp, timestamp <= lastLoggedTimestamp {
+                return
+            }
+            self.lastLoggedTimestamp = timestamp
+            self.fileWriteQueue.async {
                 self.writeLocation(location, timestamp: timestamp)
             }
         }
@@ -67,8 +75,11 @@ class GPSLogger: NSObject, ObservableObject, CLLocationManagerDelegate {
         locationManager.stopUpdatingLocation()
         timer?.invalidate()
         timer = nil
-        writeFooter()
-        fileHandle?.closeFile()
+        fileWriteQueue.sync {
+            writeFooter()
+            fileHandle?.synchronizeFile()
+            fileHandle?.closeFile()
+        }
         print("Saved GPX to: \(gpxFileURL.path)")
     }
 
@@ -105,6 +116,7 @@ class GPSLogger: NSObject, ObservableObject, CLLocationManagerDelegate {
 
         if let data = line.data(using: .utf8) {
             fileHandle?.write(data)
+            fileHandle?.synchronizeFile()
         }
     }
 
@@ -117,7 +129,10 @@ class GPSLogger: NSObject, ObservableObject, CLLocationManagerDelegate {
     <name>Track</name>
     <trkseg>
 """
-        fileHandle?.write(Data(header.utf8))
+        fileWriteQueue.async {
+            self.fileHandle?.write(Data(header.utf8))
+            self.fileHandle?.synchronizeFile()
+        }
     }
 
     private func writeFooter() {
