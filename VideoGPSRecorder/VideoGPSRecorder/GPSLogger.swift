@@ -86,11 +86,22 @@ class GPSLogger: NSObject, ObservableObject, CLLocationManagerDelegate {
 
 
         writeHeader()
+
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            guard let self = self, let location = self.lastLocation, location.horizontalAccuracy >= 0 else {
+                return
+            }
+            DispatchQueue.global(qos: .utility).async {
+                self.writeLocation(location)
+            }
+        }
     }
 
 
     func stopLogging() {
         locationManager.stopUpdatingLocation()
+        timer?.invalidate()
+        timer = nil
         writeFooter()
         fileHandle?.closeFile()
         print("Saved GPX to: \(gpxFileURL.path)")
