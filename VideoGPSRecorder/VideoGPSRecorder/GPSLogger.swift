@@ -23,53 +23,15 @@ class GPSLogger: NSObject, ObservableObject, CLLocationManagerDelegate {
             self.locationManager.activityType    = .otherNavigation
             self.locationManager.pausesLocationUpdatesAutomatically = false
             self.locationManager.requestWhenInUseAuthorization()
-         
-            self.locationManager.startUpdatingLocation()
-            
-          
-        }
-        
-       
-
-        final class LocationService: NSObject, CLLocationManagerDelegate {
-
-            private let locationManager = CLLocationManager()
-
-            override init() {
-                super.init()
-                locationManager.delegate = self
-                locationManager.desiredAccuracy = kCLLocationAccuracyBest
-                // Ask for permission up‑front
-                locationManager.requestWhenInUseAuthorization()
-            }
-
-            // MARK: - CLLocationManagerDelegate (iOS 14+)
-            func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-                switch manager.authorizationStatus {
-
-                case .notDetermined:
-                    // The user hasn’t seen the prompt yet
-                    manager.requestWhenInUseAuthorization()
-
-                case .restricted, .denied:
-                    print("❌ Location permission denied.")
-
-                case .authorizedWhenInUse, .authorizedAlways:
-                    startUpdatingLocation()
-
-                @unknown default:
-                    // Future‑proofing
-                    break
-                }
-            }
-
-            // MARK: - Helpers
-            private func startUpdatingLocation() {
-                locationManager.startUpdatingLocation()
+            switch self.locationManager.authorizationStatus {
+            case .authorizedWhenInUse, .authorizedAlways:
+                self.locationManager.startUpdatingLocation()
+            case .notDetermined, .restricted, .denied:
+                break
+            @unknown default:
+                break
             }
         }
-
-
 
         let formatter = DateFormatter()
         formatter.dateFormat = "MM-dd-yyyy--HH-mm-ss.SSS"
@@ -105,6 +67,17 @@ class GPSLogger: NSObject, ObservableObject, CLLocationManagerDelegate {
         writeFooter()
         fileHandle?.closeFile()
         print("Saved GPX to: \(gpxFileURL.path)")
+    }
+
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        switch manager.authorizationStatus {
+        case .authorizedWhenInUse, .authorizedAlways:
+            locationManager.startUpdatingLocation()
+        case .notDetermined, .restricted, .denied:
+            break
+        @unknown default:
+            break
+        }
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
