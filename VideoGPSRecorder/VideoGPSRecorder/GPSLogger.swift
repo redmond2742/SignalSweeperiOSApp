@@ -49,14 +49,17 @@ class GPSLogger: NSObject, ObservableObject, CLLocationManagerDelegate {
 
         writeHeader()
 
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+        let timer = Timer(timeInterval: 1.0, repeats: true) { [weak self] _ in
             guard let self = self, let location = self.lastLocation, location.horizontalAccuracy >= 0 else {
                 return
             }
+            let timestamp = Date()
             DispatchQueue.global(qos: .utility).async {
-                self.writeLocation(location)
+                self.writeLocation(location, timestamp: timestamp)
             }
         }
+        RunLoop.main.add(timer, forMode: .common)
+        self.timer = timer
     }
 
 
@@ -94,11 +97,11 @@ class GPSLogger: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
 
     
-    private func writeLocation(_ loc: CLLocation) {
+    private func writeLocation(_ loc: CLLocation, timestamp: Date) {
         let isoFormatter = ISO8601DateFormatter()
         isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        let timestamp = isoFormatter.string(from: loc.timestamp)
-        let line = "  <trkpt lat=\"\(loc.coordinate.latitude)\" lon=\"\(loc.coordinate.longitude)\"><ele>\(loc.altitude)</ele><time>\(timestamp)</time></trkpt>\n"
+        let timestampString = isoFormatter.string(from: timestamp)
+        let line = "  <trkpt lat=\"\(loc.coordinate.latitude)\" lon=\"\(loc.coordinate.longitude)\"><ele>\(loc.altitude)</ele><time>\(timestampString)</time></trkpt>\n"
 
         if let data = line.data(using: .utf8) {
             fileHandle?.write(data)
